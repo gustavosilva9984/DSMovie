@@ -60,17 +60,18 @@ body, html{
 }
 
 .dsmovie-card{
-    width: 260px;
+    width: 100%;
 }
 
 #dsmovie-card-list{
     padding: 40px 0;
+    
 }
 
 .dsmovie-card img{
     width: 100%;
     border-radius: 8px 8px 0 0;
-    height: 360px;
+;
 }
 
 .dsmovie-card-description{
@@ -100,4 +101,8 @@ body, html{
     align-items: center;
     justify-content: center;
     border-radius: 4px;
+}
+.dsmovie-form-container{
+    padding: 40px 0;
+    max-width: 480px;
 }
