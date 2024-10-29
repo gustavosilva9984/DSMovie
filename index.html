@@ -192,15 +192,23 @@
 
                 // Função para gerar o PDF com produtos sem imagem
                 document.getElementById('generate-pdf').addEventListener('click', () => {
-                    const productsWithoutImage = products1.filter(product => !product[headerIndex1.img]);
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF();
+                const productsWithoutImage = products1.filter(product => !product[headerIndex1.img] || product[headerIndex1.img].trim() === "");
+                
+                // Para depuração, imprime os produtos filtrados
+                console.log("Produtos sem imagem:", productsWithoutImage);
 
-                    doc.setFontSize(7); // Define o tamanho da fonte para 10
-                    doc.text('Produtos sem imagem', 10, 10);
-                    let y = 20; // Posição inicial no eixo Y
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
 
-                    productsWithoutImage.forEach(product => {
+                doc.setFontSize(10); // Define o tamanho da fonte para 10
+                doc.text('Produtos sem imagem', 10, 10);
+                let y = 20; // Posição inicial no eixo Y
+
+                // Verifica se há produtos sem imagem
+                if (productsWithoutImage.length === 0) {
+                    doc.text("Nenhum produto sem imagem encontrado.", 10, y);
+                } else {
+                    productsWithoutImage.forEach((product, index) => {
                         const nome = product[headerIndex1.nome];
                         const codigo = product[headerIndex1.codigo];
                         doc.text(`Nome: ${nome}, Código: ${codigo}`, 10, y);
@@ -209,10 +217,18 @@
                         // Desenhar uma linha separadora
                         doc.line(10, y, 200, y); // Linha horizontal
                         y += 5; // Espaço entre a linha e o próximo produto
-                    });
 
-                    doc.save('produtos_sem_imagem.pdf');
-                });
+                        // Verifica se a posição Y excede o limite da página
+                        if (y > 280) { // 280 é um valor aproximado para o limite da página
+                            doc.addPage(); // Adiciona uma nova página
+                            y = 10; // Reseta a posição Y para o topo da nova página
+                        }
+                    });
+                }
+
+                doc.save('produtos_sem_imagem.pdf');
+            });
+
 
                 // Ao carregar a página, exibir apenas os produtos da categoria "NOVIDADES"
                 const noveltiesProducts = products1.filter(product => product[headerIndex1.categoria] === 'NOVIDADES');
